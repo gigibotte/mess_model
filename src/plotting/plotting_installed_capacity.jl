@@ -37,5 +37,6 @@ function generate_df_installed_capacity(locs,list_locations)
    df = DataFrame()
    
    for i in 1:length(locs)
-
+   end
+   
 end

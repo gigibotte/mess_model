@@ -66,7 +66,7 @@ function get_economic_solution(df,sys_node,techs)
                         om_cost = tech.costs.monetary.om_con
                         df[!,col] = df[!,col] * om_cost 
                     end
-                elseif tech.essentials.parent == "conversion_plus"    
+                elseif tech.essentials.parent == "conversion_plus"      
                     if isa(tech.costs.monetary.om_prod,DataFrame)
                         df_price = tech.costs.monetary.om_con
                         df[!,col] = df[!,col] .* convert.(eltype(df[!,col]), df_price[!,"Prices"])

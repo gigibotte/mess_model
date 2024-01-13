@@ -58,6 +58,7 @@ end
 function plot_overall_bar_charts(results,attr_array,name,list_location)
     data = generate_data_total_chart(results,attr_array,list_location)
     layout = Layout(;xaxis_title = "Locations",
+                     yaxis_title = "%",
                      title = name*" Production",
                      barmode = "relative")
     p = plot(data,layout)

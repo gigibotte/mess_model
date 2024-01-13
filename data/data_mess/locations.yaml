@@ -4,18 +4,15 @@ locations:
         techs:
             heat_pump:
                 constraints:
-                    energy_cap_equals: 9.1
+                    energy_cap_equals: 140.0
             pv:
                 constraints:
-                    energy_cap_equals: 5.0
+                    energy_cap_equals: 20.0
             supply_gas:
             supply_grid_power:
             district_heating_industry:
                 constraints:
-                    energy_cap_equals: 130.1
-            district_heating:
-                constraints:
-                    energy_cap_equals: 183.1
+                    energy_cap_equals: 140.0
             demand_electricity:
                 constraints.resource: file=demand_power.csv
             demand_heat:
@@ -27,19 +24,16 @@ locations:
         techs:
             pv:
                 constraints:
-                    energy_cap_equals: 10.
+                    energy_cap_equals: 25.
             heat_pump:
                 constraints:
-                    energy_cap_equals: 9.2
-            boiler:
-                constraints:
-                    energy_cap_equals: 15.8
+                    energy_cap_equals: 65.0
             battery: 
                 constraints:
-                    storage_cap_equals: 5.0
+                    storage_cap_equals: 15.0
             district_heating_industry:
                 constraints:
-                    energy_cap_equals: 130.1
+                    energy_cap_equals: 65.0
             supply_gas:
             supply_grid_power:
             demand_electricity:
@@ -52,19 +46,16 @@ locations:
         techs:
             pv:
                 constraints:
-                    energy_cap_equals: 15.0
+                    energy_cap_equals: 45.0
             heat_pump:
                 constraints:
-                    energy_cap_equals: 9.2
+                    energy_cap_equals: 140.0
             battery: 
                 constraints:
-                    storage_cap_equals: 5.0
-            district_heating:
-                constraints:
-                    energy_cap_equals: 70.4  
+                    storage_cap_equals: 20.0
             district_heating_industry:
                 constraints:
-                    energy_cap_equals: 80.1
+                    energy_cap_equals: 140.
             supply_grid_power:      
             demand_electricity:
                 constraints.resource: file=demand_power.csv
