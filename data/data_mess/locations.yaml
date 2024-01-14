@@ -2,9 +2,6 @@ locations:
 # X1-start
     X1:
         techs:
-            heat_pump:
-                constraints:
-                    energy_cap_equals: 140.0
             pv:
                 constraints:
                     energy_cap_equals: 20.0
@@ -25,9 +22,6 @@ locations:
             pv:
                 constraints:
                     energy_cap_equals: 25.
-            heat_pump:
-                constraints:
-                    energy_cap_equals: 65.0
             battery: 
                 constraints:
                     storage_cap_equals: 15.0
@@ -47,9 +41,6 @@ locations:
             pv:
                 constraints:
                     energy_cap_equals: 45.0
-            heat_pump:
-                constraints:
-                    energy_cap_equals: 140.0
             battery: 
                 constraints:
                     storage_cap_equals: 20.0

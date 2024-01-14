@@ -45,22 +45,6 @@ techs:
                 om_con: 0.025 # 2.5p/kWh gas price #ppt
         priority: 5
 
-    district_heating:
-        essentials:
-            name: 'District Heating import'
-            color: '#AA3939'
-            parent: supply_grid
-            carrier_out: heat
-        constraints:
-            resource: 2
-            lifetime: 25
-        costs:
-            monetary:
-                interest_rate: 0.10
-                energy_cap: 7
-                om_con: 0.022 #A2A
-        priority: 5
-
     district_heating_industry:
         essentials:
             name: 'District Heating Industry'
@@ -100,64 +84,6 @@ techs:
         priority: 1
     # pv-end
 
-# Conversion
-    # boiler-start
-    boiler:
-        essentials:
-            name: 'Natural gas boiler'
-            color: '#8E2999'
-            parent: conversion
-            carrier_out: heat
-            carrier_in: gas
-        constraints:
-            energy_eff: 0.85
-            lifetime: 25
-        costs:
-            monetary:
-                interest_rate: 0.10
-                om_con: 0.004  # .4p/kWh
-        priority: 4
-    # boiler-end
-    # heatpump-start
-    heat_pump:
-        essentials:
-            name: "Heat Pump"
-            color: "#56B4E9"
-            parent: conversion
-            carrier_in: electricity
-            carrier_out: heat
-        constraints: 
-            COP: 4.
-            lifetime: 25
-        costs:
-            monetary:
-                interest_rate: 0.10
-                om_con: 0.004
-        priority: 6
-    #heatpump_end   
-
-# Conversion_plus
-    # chp-start
-    chp:
-        essentials:
-            name: 'Combined heat and power'
-            color: '#E4AB97'
-            parent: conversion_plus
-            primary_carrier_out: electricity
-            carrier_in: gas
-            carrier_out: electricity
-            carrier_out_2: heat
-        constraints:
-            energy_eff: 0.405
-            carrier_ratios.carrier_out_2: 0.8
-            lifetime: 25
-        costs:
-            monetary:
-                interest_rate: 0.10
-                energy_cap: 750
-                om_prod: 0.004  # .4p/kWh for 4500 operating hours/year
-        priority: 3
-    # chp-end
 
 ##-STORAGE-##
     # storage-start

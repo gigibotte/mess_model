@@ -1,0 +1,6 @@
+demand: 0
+pv: 1
+battery: 2
+district_heating_industry:4
+supply_gas: 5
+supply_grid_power: 5 
