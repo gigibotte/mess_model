@@ -65,6 +65,7 @@ function plot_overall_bar_charts(results,attr_array,name,list_location)
     if isnothing(p)
     else
         savefig(p, joinpath(path, "..", "plots","overall_results_$name.html"))
+        savefig(p, joinpath(path, "..", "plots","overall_results_$name.jpeg"))
     end
 end
 

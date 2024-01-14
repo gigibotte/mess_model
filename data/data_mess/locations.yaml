@@ -4,7 +4,10 @@ locations:
         techs:
             heat_pump:
                 constraints:
-                    energy_cap_equals: 140.0
+                    energy_cap_equals: 100.0
+            boiler:
+                constraints:
+                    energy_cap_equals: 25.           
             pv:
                 constraints:
                     energy_cap_equals: 20.0
@@ -49,7 +52,10 @@ locations:
                     energy_cap_equals: 45.0
             heat_pump:
                 constraints:
-                    energy_cap_equals: 140.0
+                    energy_cap_equals: 85.0
+            boiler:
+                constraints:
+                    energy_cap_equals: 35.0
             battery: 
                 constraints:
                     storage_cap_equals: 20.0
