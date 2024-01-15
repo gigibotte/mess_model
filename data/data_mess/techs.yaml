@@ -58,7 +58,7 @@ techs:
             monetary:
                 interest_rate: 0.10
                 energy_cap: 7
-                om_con: "file=dinamic_prices.csv" #A2A
+                om_con: "file=dinamic_prices_10pc.csv" #A2A
         priority: 4
     # supply-end
 

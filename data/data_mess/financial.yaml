@@ -1,0 +1,10 @@
+##
+# FINANCIAL DATA
+##
+
+# In this file user shall insert the data to compute financial evaluation
+
+# Lifetime considered in the analysis
+lifetime: 10
+# Installed 
+installed_capacity_he:
