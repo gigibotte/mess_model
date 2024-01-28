@@ -6,5 +6,43 @@
 
 # Lifetime considered in the analysis
 lifetime: 10
-# Installed 
-installed_capacity_he:
+
+# Installed Capacity Heat Exchanger [kW]
+installed_capacity_he: 850 
+
+#Full Load Hours
+hours_per_year: 8760
+flh_factor: 0.5
+
+#CAPEX Heat Exchanger [€/kW]
+capex_he: 100
+
+#Additional Installation Costs [€/kW]
+capex_extra: 115
+
+#Cost of Grid Connection [€/year]
+cost_grid_con: 10000
+
+#Fixed OPEX [€/year]
+fix_opex: 5000
+
+#Variable OPEX [€/kWh]
+var_opex: 0
+
+#Corporate Tax Rate [% to decimal] (e.g. 0.1=10%)
+ctr: 0.33
+
+#WACC [%]
+wacc: 0.08
+
+#Price increase when selling heat to other industries
+heat_price_increase: 0.05
+
+#Share of heat sold to other industries
+heat_to_industries: 0.2
+
+#Average Yearly Heat Price Yo
+
+heat_price_y0: 0.199696704199999
+
+
