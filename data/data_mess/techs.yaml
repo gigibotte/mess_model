@@ -26,7 +26,7 @@ techs:
             monetary:
                 interest_rate: 0.10
                 energy_cap: 15
-                om_con: 0.1 # 10p/kWh electricity price #ppt
+                om_con: "file=power_prices.csv"
         priority: 5
 
     supply_gas:
@@ -99,7 +99,7 @@ techs:
         costs:
             monetary:
                 interest_rate: 0.10
-                om_con: 0.004  # .4p/kWh
+                om_con: 1.06  # .4p/kWh
         priority: 4
     # boiler-end
     # heatpump-start
@@ -116,7 +116,8 @@ techs:
         costs:
             monetary:
                 interest_rate: 0.10
-                om_con: 0.004
+                om_con: 2.68 
+                om_prod: "file=power_prices.csv"
         priority: 4
     #heatpump_end   
 
@@ -137,6 +138,7 @@ techs:
             monetary:
                 interest_rate: 0.10
                 energy_cap: 250
+                om_prod: 2.13
         priority: 2
     # storage-end
 
