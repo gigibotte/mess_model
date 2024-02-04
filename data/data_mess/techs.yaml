@@ -100,6 +100,7 @@ techs:
             monetary:
                 interest_rate: 0.10
                 om_con: 1.06  # .4p/kWh
+                om_prod: 1
         priority: 4
     # boiler-end
     # heatpump-start

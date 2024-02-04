@@ -6,13 +6,13 @@ using Main.Dirs: path
 
 export plot_hourly_results
 
-function plot_hourly_results(system,system_solution)
+function plot_hourly_results(system,system_solution,scenario)
     locations_techs = get_techs_color_priority_per_location(system)
     nodes = system_solution.nodes
     for i in 1:length(nodes)
         for j in 1:length(locations_techs)
              if nodes[i].name == locations_techs[j].name
-                  plot_hourly_bar_charts(nodes[i],locations_techs[j])
+                  plot_hourly_bar_charts(nodes[i],locations_techs[j],scenario)
              end
         end
     end
@@ -36,7 +36,7 @@ function get_techs_color_priority_per_location(sys)
     return locations
 end
 
-function plot_hourly_bar_charts(result_loc, loc_post)
+function plot_hourly_bar_charts(result_loc, loc_post,scenario)
     name = loc_post.name*"_"
     k = 1
     for i in fieldnames(typeof(result_loc))
@@ -58,7 +58,7 @@ function plot_hourly_bar_charts(result_loc, loc_post)
                 elseif k == 3
                     df_name = "gas"
                 end
-                savefig(p, joinpath(path, "..", "plots","results_$name$df_name.html"))
+                savefig(p, joinpath(path, "..", "plots","results_$name$df_name$scenario.html"))
                 k += 1
             end
 

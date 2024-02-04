@@ -47,21 +47,27 @@ using YAML,CSV,DataFrames,LinearAlgebra
 
 # Running the model to obtain system solution
 println("Running the model")
+
 model_configuration = ModelConfiguration.create_model_configuration()
-my_system,techs = ProcessYaml.create_system(name)
-solution,economic_sol = Solver.core_MESS(my_system,name,model_configuration,techs)
+techs_scenarios = ["techsHP","techsDH"]
+for scenario in techs_scenarios
+    println("Running the $scenario scenario:")
+    my_system,techs = ProcessYaml.create_system(name,scenario)
+    solution,economic_sol = Solver.core_MESS(my_system,name,model_configuration,techs)
 
-# Post processing
-println("Post processing")
-aggregated_data = ProcessResultsData.generate_overall_data_results(solution)
 
-# Plotting
-println("Plotting")
-PlottingHourlyResults.plot_hourly_results(my_system,solution)
-PlottingOverallResults.plot_overall_results(my_system,aggregated_data)
+    # Post processing
+    println("Post processing")
+    aggregated_data = ProcessResultsData.generate_overall_data_results(solution)
 
-# Exporting results to CSV
-println("Saving results to CSV")
-Solver.save_results_to_CSV(solution,"sys")
-Solver.save_results_to_CSV(economic_sol,"eco")
+    # Plotting
+    println("Plotting")
+    PlottingHourlyResults.plot_hourly_results(my_system,solution,scenario)
+    PlottingOverallResults.plot_overall_results(my_system,aggregated_data,scenario)
+
+    # Exporting results to CSV
+    println("Saving results to CSV")
+    Solver.save_results_to_CSV(solution,"sys",scenario)
+    Solver.save_results_to_CSV(economic_sol,"eco",scenario)
+end
 

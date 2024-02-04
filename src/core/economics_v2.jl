@@ -15,18 +15,17 @@ using DataFrames, CSV
 function build_economic_solution(sys_results::System_results,sys::System,techs)
     # create a copy of the original System_results object
     economic_solution = deepcopy(sys_results)
-
     # loop through each Results_locations object and add the economic solution to it
     i=1
     for node in economic_solution.nodes
         # add economic solution for electricity
         if !ismissing(node.df_el)
-            node.df_el = get_economic_solution(node.df_el,sys.nodes[i],techs,"el")
+            node.df_el = get_economic_solution(node.df_el,sys.nodes[i],techs,"electricity")
         end
         
         # add economic solution for thermal energy
         if !ismissing(node.df_th)
-            node.df_th = get_economic_solution(node.df_th,sys.nodes[i],techs,"th")
+            node.df_th = get_economic_solution(node.df_th,sys.nodes[i],techs,"heat")
         end
         
         # add economic solution for gas
@@ -52,9 +51,26 @@ end
 
 function get_economic_solution(df,sys_node,techs,carrier)
     for col in names(df)
+        j=0
         for tech in sys_node.techs
             if col == tech.name
-                if tech.essentials.parent == "conversion" || tech.essentials.parent == "supply" || tech.essentials.parent == "supply_grid"
+                if tech.essentials.parent == "conversion" 
+                    if tech.essentials.carrier_in == carrier
+                        df_price = 0.
+                        df[!,col] = df[!,col] .* 0.
+                    elseif tech.essentials.carrier_out == carrier
+                        df_price = 0.
+                        df[!,col] = df[!,col] .* 0.
+                    else
+                        if isa(tech.costs.monetary.om_prod,DataFrame)
+                            df_price = tech.costs.monetary.om_prod
+                            df[!,col] = df[!,col] .* convert.(eltype(df[!,col]), df_price[!,"Prices"])
+                        else
+                            om_cost = tech.costs.monetary.om_prod
+                            df[!,col] = df[!,col] * om_cost 
+                        end
+                    end 
+                elseif tech.essentials.parent == "supply" 
                     if isa(tech.costs.monetary.om_con,DataFrame)
                         df_price = tech.costs.monetary.om_con
                         df[!,col] = df[!,col] .* convert.(eltype(df[!,col]), df_price[!,"Prices"])
@@ -70,7 +86,7 @@ function get_economic_solution(df,sys_node,techs,carrier)
                         om_cost = tech.costs.monetary.om_prod
                         df[!,col] = df[!,col] * om_cost 
                     end
-                elseif tech.essentials.parent == "storage"      
+                elseif tech.essentials.parent == "storage" 
                     if isa(tech.costs.monetary.om_prod,DataFrame)
                         df_price = tech.costs.monetary.om_prod
                         df[!,col] = df[!,col] .* convert.(eltype(df[!,col]), df_price[!,"Prices"])
@@ -81,10 +97,30 @@ function get_economic_solution(df,sys_node,techs,carrier)
                 elseif tech.essentials.parent == "demand"
                     om_cost = 0  
                     df[!,col] = df[!,col] * om_cost 
-                end   
-                   
+                end  
+            
+            elseif occursin("import",col)
+                if j==0
+                    if typeof(techs["supply_grid_power"]["costs"]["monetary"]["om_con"]) == Int64
+                        df[!,col] = df[!,col] .* techs["supply_grid_power"]["costs"]["monetary"]["om_con"]
+                        j=1
+                        break
+                    elseif occursin("file=",techs["supply_grid_power"]["costs"]["monetary"]["om_con"])
+                        filename = split(techs["supply_grid_power"]["costs"]["monetary"]["om_con"],"=")[2]
+                        df_price = CSV.read(joinpath(path, "..", "data","timeseries_data",filename),DataFrame)
+                        df[!,col] = df[!,col] .* convert.(eltype(df[!,col]), df_price[!,"Prices"])
+                        j=1
+                        break
+                    else
+                        df[!,col] = df[!,col] .* techs["supply_grid_power"]["costs"]["monetary"]["om_con"]
+                        j=1
+                        break
+                    end  
+                end
+            elseif occursin("export",col)
+                om_cost = 0  
+                df[!,col] = df[!,col] * om_cost 
             end
-           
         end
     end
     
@@ -96,7 +132,9 @@ function get_economic_solution_network(net::Results_networks, techs::Dict{Any, A
   
     for col in names(net.df_el)
         if col == "supply_grid"
-            if occursin("file=",techs["supply_grid_power"]["costs"]["monetary"]["om_con"])
+            if typeof(techs["supply_grid_power"]["costs"]["monetary"]["om_con"]) == Int64
+                net.df_el[!,col] = net.df_el[!,col] * techs["supply_grid_power"]["costs"]["monetary"]["om_con"]
+            elseif occursin("file=",techs["supply_grid_power"]["costs"]["monetary"]["om_con"])
                 filename = split(techs["supply_grid_power"]["costs"]["monetary"]["om_con"],"=")[2]
                 timeseries_df = CSV.read(joinpath(path, "..", "data","timeseries_data",filename),DataFrame)
                 net.df_el[!,col] = net.df_el[!,col] .* convert.(eltype(net.df_el[!,col]), timeseries_df[!,"Prices"])

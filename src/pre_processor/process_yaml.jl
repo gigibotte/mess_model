@@ -443,9 +443,9 @@ Given the name of the system and by calling the functions get_locations_links(),
 get_techs_techgroups(), create_struct_tech() and get_struct_location()
 it generates a System struct representing the whole energy system
 """
-function create_system(name::String)
+function create_system(name::String,techs::String)
     preliminary_locations = YAML.load(open(joinpath(path, "..", "data", "data_mess", "locations.yaml")))
-    preliminary_technologies = YAML.load(open(joinpath(path, "..", "data", "data_mess", "techs.yaml")))
+    preliminary_technologies = YAML.load(open(joinpath(path, "..", "data", "data_mess", "$techs.yaml")))
 
     locations, links= get_locations_links(preliminary_locations)
     techs, techgroups = get_techs_techgroups(preliminary_technologies)
