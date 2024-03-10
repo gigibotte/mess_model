@@ -49,7 +49,7 @@ using YAML,CSV,DataFrames,LinearAlgebra
 println("Running the model")
 
 model_configuration = ModelConfiguration.create_model_configuration()
-techs_scenarios = ["techsHP","techsDH"]
+techs_scenarios = ["HP","DH"]
 for scenario in techs_scenarios
     println("Running the $scenario scenario:")
     my_system,techs = ProcessYaml.create_system(name,scenario)

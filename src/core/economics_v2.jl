@@ -55,6 +55,7 @@ function get_economic_solution(df,sys_node,techs,carrier)
         for tech in sys_node.techs
             if col == tech.name
                 if tech.essentials.parent == "conversion" 
+                    print(tech.essentials.name,"   -   ",carrier,"\n")
                     if tech.essentials.carrier_in == carrier
                         df_price = 0.
                         df[!,col] = df[!,col] .* 0.

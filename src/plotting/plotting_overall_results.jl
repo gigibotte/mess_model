@@ -23,7 +23,7 @@ function plot_overall_results(system,array_results,scenario)
 end
 
 function get_techs_color_priority_overall_system(scenario)
-    preliminary_technologies = YAML.load(open(joinpath(path, "..", "data", "data_mess", "$scenario.yaml")))
+    preliminary_technologies = YAML.load(open(joinpath(path, "..", "data", "data_mess", "techs_$scenario.yaml")))
     techs = ProcessYaml.get_techs_techgroups(preliminary_technologies)[1]
     tech_res = ProcessYaml.create_struct_tech(techs)
     overall_post_techs = pre_to_post_vector_techs(tech_res)
