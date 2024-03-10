@@ -8,8 +8,8 @@ using DataFrames, PlotlyJS, YAML
 
 export plot_overall_results
 
-function plot_overall_results(system,array_results)
-    overall_post_techs = get_techs_color_priority_overall_system()
+function plot_overall_results(system,array_results,scenario)
+    overall_post_techs = get_techs_color_priority_overall_system(scenario)
     list_locations = get_list_locations(system.nodes)
     for i in 1:length(array_results)
         name = ""
@@ -18,12 +18,12 @@ function plot_overall_results(system,array_results)
         else
             name = "Heat"
         end
-        plot_overall_bar_charts(array_results[i],overall_post_techs,name, list_locations)
+        plot_overall_bar_charts(array_results[i],overall_post_techs,name, list_locations,scenario)
     end
 end
 
-function get_techs_color_priority_overall_system()
-    preliminary_technologies = YAML.load(open(joinpath(path, "..", "data", "data_mess", "techs.yaml")))
+function get_techs_color_priority_overall_system(scenario)
+    preliminary_technologies = YAML.load(open(joinpath(path, "..", "data", "data_mess", "techs_$scenario.yaml")))
     techs = ProcessYaml.get_techs_techgroups(preliminary_technologies)[1]
     tech_res = ProcessYaml.create_struct_tech(techs)
     overall_post_techs = pre_to_post_vector_techs(tech_res)
@@ -55,15 +55,18 @@ end
 
 
 
-function plot_overall_bar_charts(results,attr_array,name,list_location)
+function plot_overall_bar_charts(results,attr_array,name,list_location,scenario)
     data = generate_data_total_chart(results,attr_array,list_location)
     layout = Layout(;xaxis_title = "Locations",
+                     yaxis_title = "%",
                      title = name*" Production",
                      barmode = "relative")
     p = plot(data,layout)
     if isnothing(p)
     else
-        savefig(p, joinpath(path, "..", "plots","overall_results_$name.html"))
+        filename = name*"_"*scenario
+        savefig(p, joinpath(path, "..", "plots","overall_results_$filename.html"))
+        savefig(p, joinpath(path, "..", "plots","overall_results_$filename.jpeg"))
     end
 end
 

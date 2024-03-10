@@ -15,9 +15,8 @@ using YAML,CSV,DataFrames,LinearAlgebra
 function core_MESS(sys,name,model_configuration,techs)
     solution = Solver.solver(sys,name,model_configuration)
     
-    economic_solution = Economicsv2.build_economic_solution(solution, sys,techs)
-
     processed_solution = Solver.process_raw_results(solution)
+    economic_solution = Economicsv2.build_economic_solution(processed_solution, sys,techs)
 
     return processed_solution,economic_solution
 end
@@ -237,9 +236,9 @@ Each technology is analysed based on its parent and carrier. From these, the res
                 end
                 result_storage = Parents.storage(result_loc.df_el[t,"electricity_balance"],soc, tech, t, timestep)
                 result_loc.df_el[t,"electricity_balance"] = result_storage[1]
-                result_loc.df_el[t,"delta_battery"] = result_storage[2]
+                result_loc.df_el[t,"battery"] = result_storage[2]
                 result_loc.df_el[t,"soc"] = result_storage[3]
-                # what to do with delta_battery?
+                # what to do with battery?
              else
                 # other carriers to be implemented
              end
@@ -419,17 +418,17 @@ Energy exchanged in the local grid is the min between:
                  if techs[i].essentials.carrier == "electricity"
                     column_names_el[y_el] = "soc"
                     y_el += 1
-                    column_names_el[y_el] = "delta_battery"
+                    column_names_el[y_el] = "battery"
                     y_el += 1
                  elseif techs[i].essentials.carrier == "heat"
                     column_names_th[y_th] = "soc"
                     y_th += 1
-                    column_names_th[y_th] = "delta_battery"
+                    column_names_th[y_th] = "battery"
                     y_th += 1
                 elseif techs[i].essentials.carrier == "gas"
                     column_names_gas[y_gas] = "soc"
                     y_gas += 1
-                    column_names_gas[y_gas] = "delta_battery"
+                    column_names_gas[y_gas] = "battery"
                     y_gas += 1
                  end
              elseif techs[i].essentials.parent == "conversion"
@@ -697,7 +696,7 @@ Energy exchanged in the local grid is the min between:
      insertcols!(df, n_col+j, :import => zeros(Float64,nrow(df)))
      j += 1
      for i in names(df)
-         if occursin("demand",i) || occursin("balance",i) || occursin("import",i) || occursin("soc",i) || occursin("delta_battery",i)
+         if occursin("demand",i) || occursin("balance",i) || occursin("import",i) || occursin("soc",i) || occursin("battery",i)
          else
  
              name = "export_"*i
@@ -723,7 +722,7 @@ Energy exchanged in the local grid is the min between:
      insertcols!(df, n_col+j, :import => zeros(Float64,nrow(df)))
      j += 1
      for i in names(df)
-         if occursin("demand",i) || occursin("balance",i) || occursin("import",i) || occursin("soc",i) || occursin("delta_battery",i)
+         if occursin("demand",i) || occursin("balance",i) || occursin("import",i) || occursin("soc",i) || occursin("battery",i)
          else
  
              name = "excess_"*i
@@ -762,7 +761,7 @@ Energy exchanged in the local grid is the min between:
                      if occursin("demand",i)
                          dem = df[t,i]
                      
-                     elseif occursin("export",i) || occursin("import",i) || occursin("delta_battery",i)
+                     elseif occursin("export",i) || occursin("import",i) || occursin("battery",i)
                      else
                          if df[t,i] > -dem
                              exp = "export_"*i
@@ -784,7 +783,7 @@ Energy exchanged in the local grid is the min between:
                      if occursin("demand",i)
                          dem = df[t,i]
                      
-                     elseif occursin("excess",i) || occursin("import",i) || occursin("delta_battery",i)
+                     elseif occursin("excess",i) || occursin("import",i) || occursin("battery",i)
                      else
                          if df[t,i] > -dem
                              exp = "excess_"*i
@@ -822,7 +821,7 @@ Energy exchanged in the local grid is the min between:
  
      Save results to CSV (old)
  """
- function save_results_to_CSV(solution,type_sol)
+ function save_results_to_CSV(solution,type_sol,scenario)
  
      mkpath((joinpath(path, "..", "results")))
  
@@ -834,7 +833,7 @@ Energy exchanged in the local grid is the min between:
              if String(j) == "name"
              elseif ismissing(res)
              else
-                 filename = string(type_sol, "_results_", name, j, ".csv")
+                 filename = string(type_sol, "_results_", name, j,"_",scenario, ".csv")
                  touch(joinpath(path, "..", "results",filename))
                  CSV.write(joinpath(path, "..", "results",filename),res)
              end
@@ -846,7 +845,7 @@ Energy exchanged in the local grid is the min between:
          res_network = getfield(sol_network,Symbol(k))
          if ismissing(res_network)
          else
-             filename = string(type_sol, "_net_results_", k, ".csv")
+             filename = string(type_sol, "_net_results_", k,"_",scenario, ".csv")
              touch(joinpath(path,"..","results",filename))
              CSV.write(joinpath(path,"..","results",filename),res_network)
          end
